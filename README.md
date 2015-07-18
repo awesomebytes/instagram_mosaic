@@ -118,7 +118,7 @@ Then I did a little function to generate a basic webpage with the last photos, s
     Got 91 last r0sw3l thumbnail photos
     Created: user_r0sw3l_last_photos.html
 
-You can check the simple web generated [here](https://raw.githubusercontent.com/awesomebytes/instagram_mosaic/master/user_r0sw3l_last_photos.html).
+You can check the simple web generated [here](http://htmlpreview.github.io/?https://raw.githubusercontent.com/awesomebytes/instagram_mosaic/master/user_r0sw3l_last_photos.html).
 
 ===
 
