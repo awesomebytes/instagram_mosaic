@@ -1,0 +1,8 @@
+sudo apt-get install libjpeg-dev libfreetype6-dev zlib1g-dev libpng12-dev
+
+sudo ln -s /usr/lib/x86_64-linux-gnu/libjpeg.so /usr/lib
+sudo ln -s /usr/lib/x86_64-linux-gnu/libfreetype.so /usr/lib
+sudo ln -s /usr/lib/x86_64-linux-gnu/libz.so /usr/lib
+sudo ln -s /usr/include/freetype2 /usr/include/freetype
+
+sudo pip install PIL --allow-external PIL --allow-unverified PIL

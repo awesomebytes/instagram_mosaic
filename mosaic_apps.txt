@@ -1,0 +1,8 @@
+Instagram mosaic:
+
+1) Give a (public) instagram profile, and generate the user profile photo from their photos.
+   This must take into account different cases:
+   1) Enough photos (fixed number based on the pixels of profile photo 150x150px) are found in the profile --> generate the profile photo from the last ones
+   2) Not enough photos --> repeat photos
+
+2) Give a tag and a photo and from the last photos of the tag make a mosaic
