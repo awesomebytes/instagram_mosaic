@@ -44,6 +44,13 @@ def get_user_image_url(web_str):
     return user_img_url
 
 
+def download_image(image_url, filename):
+    response = requests.get(image_url, stream=True)
+    with open(filename + '.jpg', 'wb') as out_file:
+        shutil.copyfileobj(response.raw, out_file)
+    print "Saved " + filename + ".jpg"
+
+
 def get_profile_photo_from_username(username, filename=None):
     ig_url = "http://instagram.com/"
     print "Getting profile photo of " + username + " at: " + ig_url + username
@@ -55,13 +62,10 @@ def get_profile_photo_from_username(username, filename=None):
 
     if user_img_url:
         # Download image with username
-        response = requests.get(user_img_url, stream=True)
         if filename is None:
             filename = username
-        # Save the image
-        with open(filename + '.jpg', 'wb') as out_file:
-            shutil.copyfileobj(response.raw, out_file)
-        print "Saved " + filename + ".jpg"
+
+        download_image(user_img_url, filename)
     else:
         print "Username not found."
 
