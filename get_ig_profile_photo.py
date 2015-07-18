@@ -44,9 +44,15 @@ def get_user_image_url(web_str):
     return user_img_url
 
 
-def download_image(image_url, filename):
+def download_image(image_url, filename, path=None):
+    """Given an image url and a filename, download that image"""
     response = requests.get(image_url, stream=True)
-    with open(filename + '.jpg', 'wb') as out_file:
+    if path:
+        # add slash before filename if not set
+        if path[-1] != "/":
+            path += "/"
+        filename = path + filename
+    with open(filename + '.jpg', 'wb') as out_file: # if something is not jpg, im sorry!
         shutil.copyfileobj(response.raw, out_file)
     print "Saved " + filename + ".jpg"
 

@@ -11,9 +11,13 @@ the last X images from a instagram user
 """
 
 import sys
+import os
 import requests
 import json
 from instagram.client import InstagramAPI
+from instagram.bind import InstagramAPIError
+
+from get_ig_profile_photo import download_image
 
 # You need to register your own app with IG:
 # https://instagram.com/developer/
@@ -69,19 +73,26 @@ def create_web_from_images(username, photo_urls_list):
     print "Created: " + "user_" + username + "_last_photos.html"
 
 
-def get_last_media_thumbnails_urls_from_user(username, client_id, client_secret, number_of_photos=10):
+def get_last_media_thumbnails_urls_from_user(username, client_id, client_secret, number_of_photos=15):
+    """Return a list of urls of thumbnails for the user,
+    None if the user does not exist"""
     api = InstagramAPI(client_id=client_id, client_secret=client_secret)
     user_id = get_user_id_from_username(username, client_id)
     thumbnails_urls = []
     image_counter = 0
     print "Querying for images..."
-    recent_media, next_ = api.user_recent_media(user_id=user_id)
+    try:
+        recent_media, next_ = api.user_recent_media(user_id=user_id)
+    except InstagramAPIError:
+        print "Error: instagram.bind.InstagramAPIError, user probably does not exist."
+        return None
+
     # First get of images, I was getting 33 when asking for 50, and 20 when not specifying
     for media in recent_media:
         image_counter += 1
         thumbnails_urls.append(media.images['thumbnail'].url)
         # If we have enough, stop here
-        if image_counter > number_of_photos:
+        if image_counter >= number_of_photos:
             return thumbnails_urls
     # Keep getting images until we are done
     while image_counter < number_of_photos:
@@ -91,10 +102,35 @@ def get_last_media_thumbnails_urls_from_user(username, client_id, client_secret,
             image_counter += 1
             thumbnails_urls.append(media.images['thumbnail'].url)
             # if we have enough, also stop already
-            if image_counter + idx + 1 > number_of_photos:
+            if image_counter >= number_of_photos:
                 return thumbnails_urls
     # Return what we got, if we didn't get to satisfy the quantity asked for
     return thumbnails_urls
+
+
+def download_user_images(username, client_id, client_secret, folder_to_download_path=None, number_of_photos=15):
+    print "Downloading " + username + " last " + str(number_of_photos) + " images."
+    thumbnails_urls = get_last_media_thumbnails_urls_from_user(username,
+                                                               client_id,
+                                                               client_secret,
+                                                               number_of_photos=number_of_photos)
+    if thumbnails_urls is None:
+        return
+
+    # Create folder
+    if folder_to_download_path is None:
+        current_path = os.getcwd()
+        folder_to_download_path = current_path + "/user_downloads/" + username
+    print "Creating folder: " + folder_to_download_path
+    if not os.path.exists(folder_to_download_path):
+        os.makedirs(folder_to_download_path)
+    else:
+        print "Folder " + username + " already exists, we may overwrite stuff."
+    print "Downloading " + str(len(thumbnails_urls)) + " images"
+    for idx, thumb_url in enumerate(thumbnails_urls):
+        download_image(thumb_url, username + "_" + str(idx).zfill(2), path=folder_to_download_path)
+
+    print "Finished downloading"
 
 
 if __name__ == '__main__':
@@ -106,6 +142,12 @@ if __name__ == '__main__':
     username = sys.argv[1]
     thumbnails_urls = get_last_media_thumbnails_urls_from_user(username, my_client_id,
                                                                my_client_secret, number_of_photos=100)
-    print "Got " + str(len(thumbnails_urls)) + " last " + username + " thumbnail photos"
-    create_web_from_images(username, thumbnails_urls)
+    if thumbnails_urls is not None:
+        print "Got " + str(len(thumbnails_urls)) + " last " + username + " thumbnail photos"
+        create_web_from_images(username, thumbnails_urls)
+
+    print "\n\n"
+    download_user_images(username, my_client_id, my_client_secret)
+
+
 
