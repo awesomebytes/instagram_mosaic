@@ -45,19 +45,12 @@ Once I have the url I download the user photo and save it to disk using the requ
 
 The final result is executing:
 
-    > ./get_ig_profile_photo.py r0sw3l
+    ./get_ig_profile_photo.py r0sw3l
 	Getting profile photo of r0sw3l at: http://instagram.com/r0sw3l
 	User profile image url: https://igcdn-photos-h-a.akamaihd.net/hphotos-ak-xfa1/t51.2885-19/11428697_944597985591767_1329843489_a.jpg
 	Saved r0sw3l.jpg
 
 Which downloads my IG profile photo:
-![r0sw3l's profile photo](https://raw.githubusercontent.com/awesomebytes/instagram_mosaic/master/r0sw3l.jpg)
-
-Which interestingly is a 150x150px jpeg image, you can check it using imagemagick's `identify` command line tool. (`sudo apt-get install imagemagick`)
-    > identify r0sw3l.jpg 
-    r0sw3l.jpg JPEG 150x150 150x150+0+0 8-bit DirectClass 9.44KB 0.000u 0:00.000
-
-===
 
 
 
