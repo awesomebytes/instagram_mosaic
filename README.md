@@ -19,6 +19,7 @@ Our tools:
 * `requests` python library
 * `osaic` [python library for doing mosaics](https://pypi.python.org/pypi/osaic/2.0.0)
 * `python-instagram` [instagram official python API](https://github.com/Instagram/python-instagram) sudo pip install python-instagram
+* `bottle` python simple web server library, sudo pip install bottle
 
 To install osaic correctly I needed to do:
 
