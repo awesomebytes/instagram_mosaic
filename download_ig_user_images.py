@@ -158,7 +158,8 @@ def download_user_images(username, client_id, client_secret, folder_to_download_
             print "batch of " + str(max_threads) + " completed, joining..."
             for to_join_thread in to_join_threads:
                 to_join_thread.join()
-                curr_threads_number -= 1
+            to_join_threads = []
+            curr_threads_number = 0
 
 
     #download_image(thumb_url, curr_filename, path=folder_to_download_path)
