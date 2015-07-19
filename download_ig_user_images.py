@@ -83,8 +83,9 @@ def get_last_media_thumbnails_urls_from_user(username, client_id, client_secret,
     print "Querying for images..."
     try:
         recent_media, next_ = api.user_recent_media(user_id=user_id)
-    except InstagramAPIError:
-        print "Error: instagram.bind.InstagramAPIError, user probably does not exist."
+    except InstagramAPIError as e:
+        print "Error: instagram.bind.InstagramAPIError"
+        print "Exact error: " + str(e)
         return None
 
     # First get of images, I was getting 33 when asking for 50, and 20 when not specifying
@@ -97,7 +98,11 @@ def get_last_media_thumbnails_urls_from_user(username, client_id, client_secret,
     # Keep getting images until we are done
     while image_counter < number_of_photos:
         print "Querying for extra images... (Got " + str(image_counter) + " until now)"
-        recent_media, next_ = api.user_recent_media(with_next_url=next_)
+        try:
+            recent_media, next_ = api.user_recent_media(with_next_url=next_)
+        except InstagramAPIError:
+            # No more images!
+            break
         for idx, media in enumerate(recent_media):
             image_counter += 1
             thumbnails_urls.append(media.images['thumbnail'].url)
@@ -127,10 +132,14 @@ def download_user_images(username, client_id, client_secret, folder_to_download_
     else:
         print "Folder " + username + " already exists, we may overwrite stuff."
     print "Downloading " + str(len(thumbnails_urls)) + " images"
+    filenames = []
     for idx, thumb_url in enumerate(thumbnails_urls):
-        download_image(thumb_url, username + "_" + str(idx).zfill(2), path=folder_to_download_path)
+        curr_filename = username + "_" + str(idx).zfill(2) + ".jpg"
+        filenames.append(curr_filename)
+        download_image(thumb_url, curr_filename, path=folder_to_download_path)
 
     print "Finished downloading"
+    return folder_to_download_path, filenames
 
 
 if __name__ == '__main__':

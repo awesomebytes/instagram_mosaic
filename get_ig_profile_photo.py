@@ -12,6 +12,7 @@ if it exists.
 """
 
 import sys
+import os
 import requests
 import shutil
 
@@ -52,12 +53,13 @@ def download_image(image_url, filename, path=None):
         if path[-1] != "/":
             path += "/"
         filename = path + filename
-    with open(filename + '.jpg', 'wb') as out_file: # if something is not jpg, im sorry!
+    with open(filename, 'wb') as out_file: # if something is not jpg, im sorry!
         shutil.copyfileobj(response.raw, out_file)
-    print "Saved " + filename + ".jpg"
+    print "Saved " + filename
+    return filename
 
 
-def get_profile_photo_from_username(username, filename=None):
+def get_profile_photo_from_username(username, filename=None, path=None):
     ig_url = "http://instagram.com/"
     print "Getting profile photo of " + username + " at: " + ig_url + username
     # Get the website
@@ -69,9 +71,11 @@ def get_profile_photo_from_username(username, filename=None):
     if user_img_url:
         # Download image with username
         if filename is None:
-            filename = username
+            curr_path = os.getcwd()
+            filename = curr_path + "/user_downloads/" + username + ".jpg"
 
-        download_image(user_img_url, filename)
+        filename = download_image(user_img_url, filename, path)
+        return filename
     else:
         print "Username not found."
 
