@@ -18,7 +18,7 @@ Our tools:
 * Python 2.7
 * `requests` python library
 * `osaic` [python library for doing mosaics](https://pypi.python.org/pypi/osaic/2.0.0)
-* `python-instagram` [instagram official python API](https://github.com/Instagram/python-instagram)
+* `python-instagram` [instagram official python API](https://github.com/Instagram/python-instagram) sudo pip install python-instagram
 
 To install osaic correctly I needed to do:
 
