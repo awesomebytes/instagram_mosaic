@@ -1,5 +1,7 @@
 Let's make mosaics from instagram photos!
 
+![r0sw3l's profile photo mosaic](https://raw.githubusercontent.com/awesomebytes/instagram_mosaic/master/user_downloads/r0sw3l_mosaic.jpg)
+
 ===
 
 Recently I did some web scrapping finding users in instagram and their profile photo and I thought I could play a bit more with it.
@@ -124,6 +126,13 @@ You can check the simple web generated [here](http://htmlpreview.github.io/?http
 
 Having a profile photo and thumbnails, we should now generate a mosaic, shouldn't we?
 
+Well now we just grab the profile photo, grab the last images of the user, and call mosaic with both things and some default parameters!
+
+This is implemented in `create_profile_mosaic.py`.
+
+And the final results are:
+
+![r0sw3l's profile photo mosaic](https://raw.githubusercontent.com/awesomebytes/instagram_mosaic/master/user_downloads/r0sw3l_mosaic.jpg)
 
 
 
