@@ -12,6 +12,7 @@ the last X images from a instagram user
 
 import sys
 import os
+import threading
 import requests
 import json
 from instagram.client import InstagramAPI
@@ -132,11 +133,35 @@ def download_user_images(username, client_id, client_secret, folder_to_download_
     else:
         print "Folder " + username + " already exists, we may overwrite stuff."
     print "Downloading " + str(len(thumbnails_urls)) + " images"
+
+    max_threads = 10
+    print "Using "  + str(max_threads) + " threads to fasten the download."
+    threads_list = []
     filenames = []
+    args = []
     for idx, thumb_url in enumerate(thumbnails_urls):
         curr_filename = username + "_" + str(idx).zfill(2) + ".jpg"
         filenames.append(curr_filename)
-        download_image(thumb_url, curr_filename, path=folder_to_download_path)
+        args.append([thumb_url, curr_filename, folder_to_download_path])
+        threads_list.append(threading.Thread(target=download_image,
+                                              args=(thumb_url, curr_filename, folder_to_download_path,)))
+
+    # batch the execution in threads
+    curr_threads_number = 0
+    to_join_threads = []
+    for thread in threads_list:
+        thread.start()
+        to_join_threads.append(thread)
+        curr_threads_number += 1
+        # When we get to the number of threads in the pool, start joining threads
+        if curr_threads_number >= max_threads:
+            print "batch of " + str(max_threads) + " completed, joining..."
+            for to_join_thread in to_join_threads:
+                to_join_thread.join()
+                curr_threads_number -= 1
+
+
+    #download_image(thumb_url, curr_filename, path=folder_to_download_path)
 
     print "Finished downloading"
     return folder_to_download_path, filenames
